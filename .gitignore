@@ -1,0 +1,25 @@
+# Git
+.git/
+
+# Composer
+/vendor/
+composer.lock
+
+# PHPUnit
+/build/
+
+# Docker
+/var/www/html/
+!public/
+!src/
+!tests/
+!composer.json
+!phpunit.xml
+!Dockerfile
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
