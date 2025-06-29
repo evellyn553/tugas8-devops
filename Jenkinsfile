@@ -20,7 +20,7 @@ pipeline {
                     sh 'docker pull php:8.2-cli'
 
                     echo 'Running Composer install in a temporary container...'
-                    sh 'docker run --rm -v $(pwd):/app -w /app php:8.2-cli composer install --no-dev --no-interaction'
+                    sh 'docker run --rm -v "${WORKSPACE}:/app" -w /app php:8.2-cli composer install --no-dev --no-interaction'
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
                 script {
                     // Menjalankan PHPUnit di dalam container Docker PHP sementara
                     echo 'Running PHPUnit tests in a temporary container...'
-                    sh 'docker run --rm -v $(pwd):/app -w /app php:8.2-cli vendor/bin/phpunit --colors=always'
+                    sh 'docker run --rm -v "${WORKSPACE}:/app" -w /app php:8.2-cli vendor/bin/phpunit --colors=always'
                 }
             }
         }
