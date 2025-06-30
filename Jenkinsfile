@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running PHPUnit tests in a temporary container...'
-                    sh 'docker run --rm -v "$WORKSPACE:/app" -w /app php:8.2-cli vendor/bin/phpunit --colors=always'
+                    sh 'docker run --rm -v "$WORKSPACE:/app" -w /app composer:2 vendor/bin/phpunit --colors=always'
                 }
             }
         }
