@@ -1,11 +1,8 @@
-// Jenkinsfile
-
 pipeline {
     agent any
 
     environment {
-        // Mengarahkan Docker CLI ke Docker daemon host Windows (bukan socket Unix)
-        DOCKER_HOST = 'tcp://host.docker.internal:2375'
+        DOCKER_HOST = 'unix:///var/run/docker.sock'
     }
 
     stages {
