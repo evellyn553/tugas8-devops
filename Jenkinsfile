@@ -1,7 +1,12 @@
 // Jenkinsfile
 
 pipeline {
-    agent any 
+    agent any
+
+    environment {
+        // Mengarahkan Docker CLI ke Docker daemon host Windows (bukan socket Unix)
+        DOCKER_HOST = 'tcp://host.docker.internal:2375'
+    }
 
     stages {
         stage('Clone Repository') {
@@ -14,8 +19,6 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Menggunakan sh 'docker pull' dan 'docker run' untuk Composer,
-                    // dengan asumsi Jenkins Agent (host) memiliki akses docker CLI
                     echo 'Pulling php:8.2-cli image...'
                     sh 'docker pull php:8.2-cli'
 
@@ -28,7 +31,6 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    // Menjalankan PHPUnit di dalam container Docker PHP sementara
                     echo 'Running PHPUnit tests in a temporary container...'
                     sh 'docker run --rm -v "${WORKSPACE}:/app" -w /app php:8.2-cli vendor/bin/phpunit --colors=always'
                 }
@@ -37,10 +39,8 @@ pipeline {
 
         stage('Deploy Application with Docker') {
             steps {
-                echo 'Building Docker image for the PHP application...'
                 script {
-                    // Membangun image Docker dari Dockerfile lokal
-                    // docker build -t nama-image:tag .
+                    echo 'Building Docker image for the PHP application...'
                     sh "docker build -t evellyn553/tugas8-php-app:${env.BUILD_NUMBER} ."
 
                     echo "Docker image evellyn553/tugas8-php-app:${env.BUILD_NUMBER} built."
@@ -51,7 +51,7 @@ pipeline {
 
                     echo 'Running new Docker container...'
                     sh "docker run -d -p 80:80 --name tugas8-php-container evellyn553/tugas8-php-app:${env.BUILD_NUMBER}"
-                    echo "Application deployed and running on http://localhost:80 (accessible via host's port 80)."
+                    echo "Application deployed and running on http://localhost:80"
                 }
             }
         }
