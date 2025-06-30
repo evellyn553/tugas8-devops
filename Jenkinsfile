@@ -20,7 +20,7 @@ pipeline {
                     sh 'docker pull composer:2'
 
                     echo '📦 Running Composer install in a temporary container...'
-                    sh 'docker run --rm -v "$(pwd):/app" -w /app composer:2 composer install --no-dev --no-interaction'
+                    sh 'docker run --rm -v "${WORKSPACE}:/app" -w /app composer:2 composer install --no-dev --no-interaction'
                 }
             }
         }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     echo '🧪 Running PHPUnit tests in a temporary container...'
-                    sh 'docker run --rm -v "$(pwd):/app" -w /app composer:2 vendor/bin/phpunit --colors=always'
+                    sh 'docker run --rm -v "${WORKSPACE}:/app" -w /app composer:2 vendor/bin/phpunit --colors=always'
                 }
             }
         }
