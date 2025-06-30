@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HOST = 'tcp://host.docker.internal:2375'
+        APP_DIR = 'php-simple-app'
     }
 
     stages {
@@ -20,7 +21,7 @@ pipeline {
                     sh 'docker pull composer:2'
 
                     echo 'Running Composer install in a temporary container...'
-                    sh 'docker run --rm -v "$WORKSPACE:/app" -w /app composer:2 composer install --no-dev --no-interaction'
+                    sh 'docker run --rm -v "$WORKSPACE/${APP_DIR}:/app" -w /app composer:2 composer install --no-dev --no-interaction'
                 }
             }
         }
@@ -29,7 +30,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running PHPUnit tests in a temporary container...'
-                    sh 'docker run --rm -v "$WORKSPACE:/app" -w /app composer:2 vendor/bin/phpunit --colors=always'
+                    sh 'docker run --rm -v "$WORKSPACE/${APP_DIR}:/app" -w /app composer:2 vendor/bin/phpunit --colors=always'
                 }
             }
         }
@@ -38,8 +39,8 @@ pipeline {
             steps {
                 script {
                     echo 'Building Docker image...'
-                    sh "docker build -t evellyn553/tugas8-php-app:${env.BUILD_NUMBER} ."
-                    
+                    sh "docker build -t evellyn553/tugas8-php-app:${env.BUILD_NUMBER} ${APP_DIR}"
+
                     echo 'Stopping old container (if exists)...'
                     sh 'docker stop tugas8-php-container || true'
                     sh 'docker rm tugas8-php-container || true'
