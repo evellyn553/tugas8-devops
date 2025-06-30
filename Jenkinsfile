@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                echo 'Cloning the Git repository...'
+                echo '📥 Cloning the Git repository...'
                 git url: 'https://github.com/evellyn553/tugas8-devops.git', branch: 'main'
             }
         }
@@ -16,11 +16,11 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    echo 'Pulling composer:2 image...'
-                    sh 'docker pull composer:2'
+                    echo '🐘 Pulling composer:2 image...'
+                    sh "docker pull composer:2"
 
-                    echo 'Running Composer install in a temporary container...'
-                    sh 'docker run --rm -v "$WORKSPACE:/app" -w /app composer:2 composer install --no-dev --no-interaction'
+                    echo '📦 Running Composer install in a temporary container...'
+                    sh "docker run --rm -v '${env.WORKSPACE}:/app' -w /app composer:2 composer install --no-dev --no-interaction"
                 }
             }
         }
@@ -28,8 +28,8 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    echo 'Running PHPUnit tests in a temporary container...'
-                    sh 'docker run --rm -v "$WORKSPACE:/app" -w /app composer:2 vendor/bin/phpunit --colors=always'
+                    echo '🧪 Running PHPUnit tests in a temporary container...'
+                    sh "docker run --rm -v '${env.WORKSPACE}:/app' -w /app composer:2 vendor/bin/phpunit --colors=always"
                 }
             }
         }
@@ -37,14 +37,14 @@ pipeline {
         stage('Deploy Application with Docker') {
             steps {
                 script {
-                    echo 'Building Docker image...'
+                    echo '🐳 Building Docker image...'
                     sh "docker build -t evellyn553/tugas8-php-app:${env.BUILD_NUMBER} ."
 
-                    echo 'Stopping old container (if exists)...'
+                    echo '🛑 Stopping old container (if exists)...'
                     sh 'docker stop tugas8-php-container || true'
                     sh 'docker rm tugas8-php-container || true'
 
-                    echo 'Running new container...'
+                    echo '🚀 Running new container...'
                     sh "docker run -d -p 80:80 --name tugas8-php-container evellyn553/tugas8-php-app:${env.BUILD_NUMBER}"
                 }
             }
@@ -52,8 +52,14 @@ pipeline {
     }
 
     post {
-        always { echo 'Pipeline finished.' }
-        success { echo 'Pipeline completed successfully!' }
-        failure { echo 'Pipeline failed. Check logs for errors.' }
+        always {
+            echo '🏁 Pipeline finished.'
+        }
+        success {
+            echo '✅ Pipeline completed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed. Check logs for errors.'
+        }
     }
 }
