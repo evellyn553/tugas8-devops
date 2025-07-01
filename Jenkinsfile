@@ -7,7 +7,6 @@ pipeline {
                 script {
                     echo '🧪 Running PHPUnit tests...'
                     sh '''
-                        pwd
                         docker run --rm -v "$PWD":/app -w /app php:8.2-cli bash -c "\
                             apt-get update && \
                             apt-get install -y unzip wget && \
@@ -22,7 +21,7 @@ pipeline {
         stage('Deploy Application with Docker') {
             steps {
                 echo '🚀 Deploying application...'
-                // Tambahkan deployment script kamu di sini
+                // Tambahkan script deploy kamu di sini
             }
         }
     }
