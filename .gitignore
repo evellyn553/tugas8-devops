@@ -1,20 +1,27 @@
 # Git
 .git/
 
-# Composer
-/vendor/
+# Composer (jangan ignore file-nya, hanya folder vendor)
+vendor/
 
 # PHPUnit
-/build/
+build/
 
-# Docker
-/var/www/html/
-!public/
-!src/
-!tests/
+# Docker - Jangan ignore isi project kamu
+# Hapus baris ini, karena bikin masalah:
+# /var/www/html/
+
+# Biarkan folder-folder penting tetap masuk Git
+public/
+src/
+tests/
+
+# Tetap include file penting
 !composer.json
+!composer.lock
 !phpunit.xml
 !Dockerfile
+!Jenkinsfile
 
 # OS-specific
 .DS_Store
