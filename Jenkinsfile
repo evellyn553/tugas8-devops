@@ -15,11 +15,12 @@ pipeline {
                     echo '🧪 Running PHPUnit tests...'
                     sh '''
                         docker run --rm -v "$(pwd):/app" -w /app php:8.2-cli bash -c '
-                            apt-get update &&
-                            apt-get install -y unzip wget &&
-                            wget -O phpunit https://phar.phpunit.de/phpunit-9.phar &&
-                            chmod +x phpunit &&
-                            ./phpunit --colors=always
+                            set -e
+                            apt-get update
+                            apt-get install -y unzip wget
+                            wget -O phpunit https://phar.phpunit.de/phpunit-9.phar
+                            chmod +x phpunit
+                            php phpunit --colors=always
                         '
                     '''
                 }
