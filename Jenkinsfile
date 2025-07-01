@@ -19,7 +19,6 @@ pipeline {
                             apt-get install -y unzip wget &&
                             wget -O phpunit https://phar.phpunit.de/phpunit-9.phar &&
                             chmod +x phpunit &&
-                            ls -lah phpunit &&
                             php phpunit --colors=always
                         "
                     '''
