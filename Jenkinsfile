@@ -12,7 +12,7 @@ pipeline {
                             apt-get install -y unzip wget && \
                             wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && \
                             chmod +x phpunit && \
-                            php phpunit --colors=always"
+                            php phpunit --colors=always --configuration=phpunit.xml"
                     '''
                 }
             }
@@ -21,7 +21,7 @@ pipeline {
         stage('Deploy Application with Docker') {
             steps {
                 echo '🚀 Deploying application...'
-                // Tambahkan script deploy kamu di sini
+                // Tambahkan langkah deploy kamu di sini
             }
         }
     }
