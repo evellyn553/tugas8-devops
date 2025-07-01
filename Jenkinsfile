@@ -9,7 +9,7 @@ pipeline {
     stage('Install Dependencies') {
       steps {
         echo '📦 Installing PHP dependencies...'
-        // FIX INI YA:
+        // PAKAI DOUBLE QUOTE AGAR WORKSPACE TEREKSPANSI
         sh "docker run --rm -v \"${WORKSPACE}\":/app -w /app composer install"
       }
     }
