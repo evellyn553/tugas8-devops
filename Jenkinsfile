@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_HOST = 'tcp://host.docker.internal:2375'
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
@@ -13,23 +9,14 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    echo '🐘 Pulling composer:2 image...'
-                    sh 'docker pull composer:2'
-
-                    echo '📦 Running Composer install in a temporary container...'
-                    sh 'docker run --rm -v "${WORKSPACE}:/app" -w /app composer:2 composer install --no-dev --no-interaction'
-                }
-            }
-        }
-
         stage('Run Unit Tests') {
             steps {
                 script {
-                    echo '🧪 Running PHPUnit tests in a temporary container...'
-                    sh 'docker run --rm -v "${WORKSPACE}:/app" -w /app composer:2 vendor/bin/phpunit --colors=always'
+                    echo '🧪 Running PHPUnit tests...'
+                    def actualPath = sh(script: 'pwd', returnStdout: true).trim()
+
+                    // Gunakan image phpunit dari Docker Hub
+                    sh "docker run --rm -v '${actualPath}:/app' -w /app php:8.2-cli bash -c \"apt-get update && apt-get install -y unzip wget && wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && chmod +x phpunit && ./phpunit --colors=always\""
                 }
             }
         }
