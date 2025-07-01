@@ -47,17 +47,17 @@ pipeline {
                     // Menggunakan multi-line string untuk menjalankan beberapa perintah bash.
                     sh """
                         docker run --rm \\
-                            -v "${env.WORKSPACE}:/app" \\  // Mount workspace Jenkins ke /app di container
-                            -w /app composer:2 \\         // Mengatur working directory di dalam container ke /app
+                            -v "${env.WORKSPACE}:/app" \\  # Mount workspace Jenkins ke /app di container
+                            -w /app composer:2 \\         # Mengatur working directory di dalam container ke /app
                             bash -c "
                                 echo '--- Debugging /app directory ---'
                                 echo 'Current working directory inside container:'
-                                pwd // Menampilkan working directory di dalam container
+                                pwd # Menampilkan working directory di dalam container
                                 echo 'Listing contents of /app:'
-                                ls -l /app // Menampilkan isi dari folder /app untuk verifikasi composer.json
+                                ls -l /app # Menampilkan isi dari folder /app untuk verifikasi composer.json
                                 echo '--- End Debugging ---'
                                 echo 'Mencoba menginstal dependensi Composer...'
-                                composer install --no-dev --no-interaction // Menjalankan instalasi Composer
+                                composer install --no-dev --no-interaction # Menjalankan instalasi Composer
                             "
                     """
                 }
@@ -73,9 +73,9 @@ pipeline {
                     // Menjalankan PHPUnit di dalam container Docker PHP.
                     sh """
                         docker run --rm \\
-                            -v "${env.WORKSPACE}:/app" \\ // Mount workspace Jenkins ke /app di container
-                            -w /app php:8.1-cli \\        // Mengatur working directory di dalam container ke /app
-                            ./vendor/bin/phpunit --configuration phpunit.xml // Menjalankan PHPUnit
+                            -v "${env.WORKSPACE}:/app" \\ # Mount workspace Jenkins ke /app di container
+                            -w /app php:8.1-cli \\        # Mengatur working directory di dalam container ke /app
+                            ./vendor/bin/phpunit --configuration phpunit.xml # Menjalankan PHPUnit
                     """
                 }
             }
