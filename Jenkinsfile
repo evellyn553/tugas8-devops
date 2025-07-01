@@ -32,11 +32,11 @@ pipeline {
                     echo '🐳 Building Docker image...'
                     sh "docker build -t evellyn553/tugas8-php-app:${env.BUILD_NUMBER} ."
 
-                    echo '🛑 Stopping old container (if exists)...'
+                    echo '🛑 Stopping old container...'
                     sh 'docker stop tugas8-php-container || true'
                     sh 'docker rm tugas8-php-container || true'
 
-                    echo '🚀 Running new container...'
+                    echo '🚀 Starting new container...'
                     sh "docker run -d -p 80:80 --name tugas8-php-container evellyn553/tugas8-php-app:${env.BUILD_NUMBER}"
                 }
             }
