@@ -44,15 +44,20 @@ pipeline {
                 echo '📦 Menginstal dependensi PHP...'
                 // Memastikan perintah dijalankan di direktori root workspace Jenkins.
                 dir("${env.WORKSPACE}") { // Kembali ke root workspace
+                    // Menampilkan isi direktori workspace Jenkins sebelum Docker run.
+                    echo '--- Debugging Jenkins Workspace ---'
+                    sh 'ls -l .' // Menampilkan isi direktori saat ini di Jenkins workspace
+                    echo '--- End Debugging Jenkins Workspace ---'
+
                     // Menjalankan Composer di dalam container Docker.
                     // Menggunakan multi-line string untuk menjalankan beberapa perintah bash.
                     sh """docker run --rm -v "${env.WORKSPACE}:/app" -w /app composer:2 bash -c "
-                                echo '--- Debugging /app directory ---'
+                                echo '--- Debugging /app directory inside container ---'
                                 echo 'Current working directory inside container:'
                                 pwd # Menampilkan working directory di dalam container
                                 echo 'Listing contents of /app:'
                                 ls -l /app # Menampilkan isi dari folder /app untuk verifikasi composer.json
-                                echo '--- End Debugging ---'
+                                echo '--- End Debugging /app directory inside container ---'
                                 echo 'Mencoba menginstal dependensi Composer...'
                                 composer install --no-dev --no-interaction # Menjalankan instalasi Composer
                             "
