@@ -1,37 +1,44 @@
 pipeline {
     agent any
 
+    environment {
+        COMPOSER_HOME = '/tmp'
+    }
+
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                echo '📥 Cloning repository...'
-                git url: 'https://github.com/evellyn553/tugas8-devops.git', branch: 'main'
+                checkout scm
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installing PHP dependencies with Composer...'
-                sh 'docker run --rm -v $PWD/php-simple-app:/app -w /app composer install'
+                sh 'docker run --rm -v ${WORKSPACE}:/app -w /app composer install'
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                echo '🧪 Running PHPUnit tests...'
-                sh 'docker run --rm -v $PWD/php-simple-app:/app -w /app php:8.1-cli php vendor/bin/phpunit tests'
+                echo '🧪 Running unit tests with PHPUnit...'
+                sh 'docker run --rm -v ${WORKSPACE}:/app -w /app php:8.1-cli php vendor/bin/phpunit --colors=always'
             }
         }
 
         stage('Deploy Application with Docker') {
             steps {
-                echo '🚀 Deploying with Docker...'
-                sh 'docker-compose -f php-simple-app/docker-compose.yml up -d --build'
+                echo '🚀 Deploying application using Docker...'
+                sh 'docker build -t php-simple-app .'
+                sh 'docker run -d -p 8080:80 php-simple-app'
             }
         }
     }
 
     post {
+        success {
+            echo '✅ Build and deployment successful!'
+        }
         failure {
             echo '❌ Pipeline failed. Please check the logs.'
         }
