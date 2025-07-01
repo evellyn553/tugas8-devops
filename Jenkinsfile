@@ -9,6 +9,7 @@ pipeline {
     stage('Install Dependencies') {
       steps {
         echo '📦 Installing PHP dependencies...'
+        // FIX INI YA:
         sh "docker run --rm -v \"${WORKSPACE}\":/app -w /app composer install"
       }
     }
@@ -31,7 +32,7 @@ pipeline {
 
   post {
     success {
-      echo '✅ Berhasil!'
+      echo '✅ Pipeline sukses!'
     }
     failure {
       echo '❌ Pipeline gagal, cek log.'
