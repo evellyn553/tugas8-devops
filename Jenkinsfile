@@ -6,6 +6,12 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -15,14 +21,14 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installing PHP dependencies with Composer...'
-                sh 'docker run --rm -v "$PWD":/app -w /app composer install'
+                sh 'docker run --rm -v $(pwd):/app -w /app composer install'
             }
         }
 
         stage('Run Unit Tests') {
             steps {
                 echo '🧪 Running PHPUnit tests...'
-                sh 'docker run --rm -v "$PWD":/app -w /app php:8.1-cli ./vendor/bin/phpunit --configuration phpunit.xml'
+                sh 'docker run --rm -v $(pwd):/app -w /app php:8.1-cli ./vendor/bin/phpunit --configuration phpunit.xml'
             }
         }
 
