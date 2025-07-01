@@ -1,17 +1,17 @@
 {
-    "name": "evellyn553/tugas8-devops",
-    "description": "A simple PHP application for Jenkins CI/CD demo.",
-    "type": "project",
-    "require": {
-        "php": ">=7.4"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5"
-    },
-    "autoload": {
-        "files": ["src/functions.php"]
-    },
-    "scripts": {
-        "test": "phpunit --colors=always"
-    }
+  "name": "evellyn553/tugas8-devops",
+  "description": "A simple PHP application for Jenkins CI/CD demo.",
+  "type": "project",
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "files": ["src/functions.php"]
+  },
+  "scripts": {
+    "test": "phpunit --colors=always"
+  }
 }
