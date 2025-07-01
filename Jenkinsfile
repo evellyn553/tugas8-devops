@@ -21,9 +21,9 @@ pipeline {
         // Menentukan port untuk aplikasi yang di-deploy.
         // Diganti dari 8080 ke 8081 untuk menghindari konflik dengan Jenkins itu sendiri.
         APP_PORT = '8081'
-        // Menentukan subdirektori tempat kode proyek berada setelah checkout.
-        // Berdasarkan log, kode proyek berada di dalam folder 'php-simple-app' setelah checkout.
-        PROJECT_SUBDIR = 'php-simple-app'
+        // MENGUBAH INI: Menentukan subdirektori tempat kode proyek berada setelah checkout.
+        // Berdasarkan log debugging terakhir, kode proyek berada di dalam folder 'php-simple-app/php-simple-app'.
+        PROJECT_SUBDIR = 'php-simple-app/php-simple-app'
     }
 
     // Mendefinisikan tahapan (stages) dari pipeline.
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 echo '📦 Menginstal dependensi PHP...'
                 // Memastikan perintah dijalankan di direktori subfolder proyek di workspace Jenkins.
-                dir("${env.WORKSPACE}/${env.PROJECT_SUBDIR}") { // Masuk ke subfolder php-simple-app
+                dir("${env.WORKSPACE}/${env.PROJECT_SUBDIR}") { // Masuk ke subfolder php-simple-app/php-simple-app
                     // Menjalankan Composer di dalam container Docker.
                     // Menggunakan multi-line string untuk menjalankan beberapa perintah bash.
                     sh """docker run --rm -v "${env.WORKSPACE}/${env.PROJECT_SUBDIR}:/app" -w /app composer:2 bash -c "
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 echo '🧪 Menjalankan PHPUnit tests...'
                 // Memastikan perintah dijalankan di direktori subfolder proyek di workspace Jenkins.
-                dir("${env.WORKSPACE}/${env.PROJECT_SUBDIR}") { // Masuk ke subfolder php-simple-app
+                dir("${env.WORKSPACE}/${env.PROJECT_SUBDIR}") { // Masuk ke subfolder php-simple-app/php-simple-app
                     // Menjalankan PHPUnit di dalam container Docker PHP.
                     sh """docker run --rm -v "${env.WORKSPACE}/${env.PROJECT_SUBDIR}:/app" -w /app php:8.1-cli ./vendor/bin/phpunit --configuration phpunit.xml"""
                 }
@@ -80,7 +80,7 @@ pipeline {
             steps {
                 echo '🚀 Membangun dan menjalankan image Docker aplikasi...'
                 // Memastikan perintah dijalankan di direktori subfolder proyek di workspace Jenkins.
-                dir("${env.WORKSPACE}/${env.PROJECT_SUBDIR}") { // Masuk ke subfolder php-simple-app
+                dir("${env.WORKSPACE}/${env.PROJECT_SUBDIR}") { // Masuk ke subfolder php-simple-app/php-simple-app
                     // Menghentikan dan menghapus container aplikasi yang mungkin sedang berjalan.
                     // '|| true' mencegah pipeline gagal jika container belum ada.
                     sh "docker stop ${env.APP_CONTAINER_NAME} || true"
