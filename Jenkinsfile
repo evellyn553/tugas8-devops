@@ -2,20 +2,12 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
-            steps {
-                echo '📥 Cloning the Git repository...'
-                git url: 'https://github.com/evellyn553/tugas8-devops.git', branch: 'main'
-            }
-        }
-
         stage('Run Unit Tests') {
             steps {
                 script {
                     echo '🧪 Running PHPUnit tests...'
                     def actualPath = sh(script: 'pwd', returnStdout: true).trim()
 
-                    // Gunakan image phpunit dari Docker Hub
                     sh "docker run --rm -v '${actualPath}:/app' -w /app php:8.2-cli bash -c \"apt-get update && apt-get install -y unzip wget && wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && chmod +x phpunit && ./phpunit --colors=always\""
                 }
             }
