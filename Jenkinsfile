@@ -1,41 +1,43 @@
 pipeline {
   agent any
-
-  environment {
-    COMPOSER_HOME = '/tmp'
-  }
+  environment { COMPOSER_HOME = '/tmp' }
 
   stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+
     stage('Install Dependencies') {
       steps {
         echo '📦 Installing PHP dependencies...'
-        // PAKAI DOUBLE QUOTE AGAR WORKSPACE TEREKSPANSI
-        sh "docker run --rm -v \"${WORKSPACE}\":/app -w /app composer install"
+        dir("${env.WORKSPACE}") {
+          sh 'docker run --rm -v "${PWD}:/app" -w /app composer install'
+        }
       }
     }
 
     stage('Run Unit Tests') {
       steps {
         echo '🧪 Running PHPUnit tests...'
-        sh "docker run --rm -v \"${WORKSPACE}\":/app -w /app php:8.1-cli ./vendor/bin/phpunit --configuration phpunit.xml"
+        dir("${env.WORKSPACE}") {
+          sh 'docker run --rm -v "${PWD}:/app" -w /app php:8.1-cli ./vendor/bin/phpunit --configuration phpunit.xml'
+        }
       }
     }
 
-    stage('Deploy') {
+    stage('Deploy Application with Docker') {
       steps {
-        echo '🚀 Deploying app...'
-        sh "docker build -t php-simple-app \"${WORKSPACE}\""
-        sh "docker run -d -p 8080:80 php-simple-app"
+        echo '🚀 Building & running Docker image...'
+        dir("${env.WORKSPACE}") {
+          sh 'docker build -t php-simple-app .'
+          sh 'docker run -d -p 8080:80 php-simple-app'
+        }
       }
     }
   }
 
   post {
-    success {
-      echo '✅ Pipeline sukses!'
-    }
-    failure {
-      echo '❌ Pipeline gagal, cek log.'
-    }
+    failure { echo '❌ Pipeline gagal, cek log.' }
+    success { echo '✅ Pipeline sukses!' }
   }
 }
