@@ -45,11 +45,8 @@ pipeline {
                 dir("${env.WORKSPACE}") {
                     // Menjalankan Composer di dalam container Docker.
                     // Menggunakan multi-line string untuk menjalankan beberapa perintah bash.
-                    sh """
-                        docker run --rm \\
-                            -v "${env.WORKSPACE}:/app" \\  # Mount workspace Jenkins ke /app di container
-                            -w /app composer:2 \\         # Mengatur working directory di dalam container ke /app
-                            bash -c "
+                    // Perintah docker run sekarang dalam satu baris logis untuk menghindari masalah backslash.
+                    sh """docker run --rm -v "${env.WORKSPACE}:/app" -w /app composer:2 bash -c "
                                 echo '--- Debugging /app directory ---'
                                 echo 'Current working directory inside container:'
                                 pwd # Menampilkan working directory di dalam container
@@ -71,12 +68,8 @@ pipeline {
                 // Memastikan perintah dijalankan di direktori workspace Jenkins.
                 dir("${env.WORKSPACE}") {
                     // Menjalankan PHPUnit di dalam container Docker PHP.
-                    sh """
-                        docker run --rm \\
-                            -v "${env.WORKSPACE}:/app" \\ # Mount workspace Jenkins ke /app di container
-                            -w /app php:8.1-cli \\        # Mengatur working directory di dalam container ke /app
-                            ./vendor/bin/phpunit --configuration phpunit.xml # Menjalankan PHPUnit
-                    """
+                    // Perintah docker run sekarang dalam satu baris logis.
+                    sh """docker run --rm -v "${env.WORKSPACE}:/app" -w /app php:8.1-cli ./vendor/bin/phpunit --configuration phpunit.xml"""
                 }
             }
         }
