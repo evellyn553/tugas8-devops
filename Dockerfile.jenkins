@@ -7,7 +7,6 @@ USER root
 
 # Instal Docker CLI
 # Perbarui daftar paket dan instal docker.io (ini adalah Docker CLI di Debian/Ubuntu)
-# Ini sama dengan yang aku berikan sebelumnya untuk instalasi Docker CLI
 RUN apt-get update && \
     apt-get install -y apt-transport-https \
                        ca-certificates \
@@ -22,8 +21,8 @@ RUN apt-get update && \
     apt-get update && \
     apt-get install -y docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Opsional: Tambahkan user jenkins ke grup docker di dalam container
-# Ini untuk memastikan user jenkins memiliki izin yang tepat terhadap Docker socket
+# Opsional (tetapi direkomendasikan): Tambahkan user jenkins ke grup docker di dalam container
+# Ini membantu agar user jenkins punya izin ke socket docker
 RUN groupadd -f docker && usermod -aG docker jenkins
 
 # Kembali ke user jenkins
